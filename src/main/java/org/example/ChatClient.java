@@ -19,22 +19,23 @@ public class ChatClient {
              Scanner scanner = new Scanner(System.in)) {
 
             String nickname = null;
-            String serverMessage;
+            String serverMessage1;
 
             // Get nickname from the server
-            serverMessage = reader.readLine();
-            System.out.println(serverMessage);
+            serverMessage1 = reader.readLine();
+            System.out.println(serverMessage1);
             nickname = scanner.nextLine();
             writer.println(nickname);
 
             // Read messages from the server and print them
             new Thread(() -> {
                 try {
-                    while ((serverMessage = serverReader.readLine()) != null) {
+                    String serverMessage; // Объявляем serverMessage здесь
+                    while ((serverMessage = reader.readLine()) != null) {
                         System.out.println(serverMessage);
                     }
-                } catch (IOException ex) {
-                    System.out.println("Server connection closed: " + ex.getMessage());
+                } catch (IOException e) {
+                    System.err.println("Error reading from server: " + e.getMessage());
                 }
             }).start();
 
