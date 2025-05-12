@@ -27,7 +27,7 @@ public class ChatClient {
                         System.out.println(serverMessage);
                     }
                 } catch (IOException e) {
-                    System.err.println("Error reading from server: " + e.getMessage());
+                    System.out.println("end");;
                 }
             }).start();
             String clientMessage;

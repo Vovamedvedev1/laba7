@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 public class ChatServer {
     private static final Logger logger = LoggerFactory.getLogger(ChatServer.class);
@@ -24,7 +23,7 @@ public class ChatServer {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 logger.info("New client connected from {}", clientSocket.getInetAddress());
-                ClientHandler clientHandler = new ClientHandler(clientSocket, clients);
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
                 clients.add(clientHandler);
                 executorService.submit(clientHandler);
             }
@@ -36,14 +35,8 @@ public class ChatServer {
         private String nickname;
         private PrintWriter writer;
         private BufferedReader reader;
-        private final List<ClientHandler> clients;
-        public ClientHandler(Socket socket, List<ClientHandler> clients) {
-            this.socket = socket;
-            this.clients = clients;
-        }
         public ClientHandler(Socket socket) {
             this.socket = socket;
-            this.clients = new ArrayList<>();
         }
         public String getNickname() {
             return nickname;
@@ -55,13 +48,19 @@ public class ChatServer {
                 writer = new PrintWriter(socket.getOutputStream(), true);
                 writer.println("Enter your nickname:");
                 nickname = reader.readLine().trim();
-                while (nickname.equals("")) {
-                    writer.println("The client's nickname cannot be empty.");
-                    logger.error("The client's nickname cannot be empty.");
-                }
-                while (clients.stream().map(ClientHandler::getNickname).collect(Collectors.toSet()).contains(nickname)) {
-                    writer.println("The client with the nickname is already connected.");
-                    logger.error("The client with the nickname {nickname} is already connected.");
+                while (nickname.equals("") || clients.stream().map(ClientHandler::getNickname).filter(nick -> nick.equals(nickname)).count() > 1) {
+                    if (nickname.equals("")) {
+                        writer.println("The client's nickname cannot be empty.");
+                        clientLogger.error("The client's nickname cannot be empty.");
+                        writer.println("Enter your nickname:");
+                        nickname = reader.readLine().trim();
+                    }
+                    else {
+                        writer.println("The client with the nickname is already connected.");
+                        clientLogger.error("The client with the nickname {} is already connected.", nickname);
+                        writer.println("Enter your nickname:");
+                        nickname = reader.readLine().trim();
+                    }
                 }
                 clientLogger.info("Client {} connected as {}", socket.getInetAddress(), nickname);
                 String message;
@@ -119,7 +118,7 @@ public class ChatServer {
         private void sendPrivateMessage(String recipient, String message, String sender) {
             if (message.equals("")) {
                 writer.println("You can't send empty message.");
-                clientLogger.warn("The user {} was trying to send a private empty message {} to {}", sender, recipient);
+                clientLogger.warn("The user {} was trying to send a private empty message {} to {}", sender, message,recipient);
             }
             else if (sender.equals(recipient)) {
                 writer.println("You can't send a message to yourself.");
@@ -139,7 +138,7 @@ public class ChatServer {
                     clientLogger.info("Private message sent from {} to {}: {}", sender, recipient, message);
                 } else {
                     writer.println("User " + recipient + " not found.");
-                    clientLogger.warn("User {} not found when {} tried to send a private message", recipient, sender);
+                    clientLogger.error("User {} not found when {} tried to send a private message.", recipient, sender);
                 }
             }
         }

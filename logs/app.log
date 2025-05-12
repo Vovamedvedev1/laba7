@@ -1,2 +1,36 @@
-
-2025-05-12 09:00:15 ERROR org.example.ChatServer$ClientHandler - Error handling client vova: Connection reset
+2025-05-12 11:13:01 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:13:03 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:13:27 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:13:29 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:13:33 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:13:47 WARN  org.example.ChatServer$ClientHandler - Broadcast empty message from vova
+2025-05-12 11:13:51 WARN  org.example.ChatServer$ClientHandler - Broadcast empty message from vova
+2025-05-12 11:18:10 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:18:12 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:18:35 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:18:36 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:18:40 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:18:46 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:18:51 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:18:54 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:18:58 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:18:59 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:19:00 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:19:03 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:19:08 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:19:11 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:19:14 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:19:16 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:19:17 ERROR org.example.ChatServer$ClientHandler - The client's nickname cannot be empty.
+2025-05-12 11:19:21 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:19:25 ERROR org.example.ChatServer$ClientHandler - The client with the nickname vova is already connected.
+2025-05-12 11:20:13 WARN  org.example.ChatServer$ClientHandler - Broadcast empty message from stas
+2025-05-12 11:20:13 WARN  org.example.ChatServer$ClientHandler - Broadcast empty message from stas
+2025-05-12 11:20:16 WARN  org.example.ChatServer$ClientHandler - Broadcast empty message from stas
+2025-05-12 11:22:29 WARN  org.example.ChatServer$ClientHandler - The user stas was trying to send a private empty message  to vova
+2025-05-12 11:22:59 ERROR org.example.ChatServer$ClientHandler - User jon not found when stas tried to send a private message.
+2025-05-12 11:23:20 WARN  org.example.ChatServer$ClientHandler - Broadcast empty message from vova
+2025-05-12 11:23:21 WARN  org.example.ChatServer$ClientHandler - Broadcast empty message from vova
+2025-05-12 11:25:24 WARN  org.example.ChatServer$ClientHandler - The user stas was trying to send a private message kll to himself
+2025-05-12 11:26:07 ERROR org.example.ChatServer$ClientHandler - User artur not found when stas tried to send a private message.
+2025-05-12 11:26:36 ERROR org.example.ChatServer$ClientHandler - User artur not found when vova tried to send a private message.
