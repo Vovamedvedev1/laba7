@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class ChatServer {
     private static final Logger logger = LoggerFactory.getLogger(ChatServer.class);
@@ -44,13 +45,24 @@ public class ChatServer {
             this.socket = socket;
             this.clients = new ArrayList<>();
         }
+        public String getNickname() {
+            return nickname;
+        }
         @Override
         public void run() {
             try {
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 writer = new PrintWriter(socket.getOutputStream(), true);
                 writer.println("Enter your nickname:");
-                nickname = reader.readLine();
+                nickname = reader.readLine().trim();
+                while (nickname.equals("")) {
+                    writer.println("The client's nickname cannot be empty.");
+                    logger.error("The client's nickname cannot be empty.");
+                }
+                while (clients.stream().map(ClientHandler::getNickname).collect(Collectors.toSet()).contains(nickname)) {
+                    writer.println("The client with the nickname is already connected.");
+                    logger.error("The client with the nickname {nickname} is already connected.");
+                }
                 clientLogger.info("Client {} connected as {}", socket.getInetAddress(), nickname);
                 String message;
                 while ((message = reader.readLine()) != null) {
@@ -97,7 +109,7 @@ public class ChatServer {
         private void updateClientList() {
             StringBuilder sb = new StringBuilder("Connected users: ");
             for (ClientHandler client : clients) {
-                sb.append(client.nickname).append(" ");
+                sb.append(client.nickname).append(", ");
             }
             String userList = sb.toString();
             for (ClientHandler client : clients) {
@@ -105,24 +117,35 @@ public class ChatServer {
             }
         }
         private void sendPrivateMessage(String recipient, String message, String sender) {
-            ClientHandler recipientClient = null;
-            for (ClientHandler client : clients) {
-                if (client.nickname.equalsIgnoreCase(recipient)) {
-                    recipientClient = client;
-                    break;
-                }
+            if (message.equals("")) {
+                writer.println("You can't send empty message.");
+                clientLogger.warn("The user {} was trying to send a private empty message {} to {}", sender, recipient);
             }
-            if (recipientClient != null) {
-                recipientClient.writer.println("(Private from " + sender + "): " + message);
-                writer.println("Private message sent to " + recipient + ": " + message);
-                clientLogger.info("Private message sent from {} to {}: {}", sender, recipient, message);
-            } else {
-                writer.println("User " + recipient + " not found.");
-                clientLogger.warn("User {} not found when {} tried to send a private message", recipient, sender);
+            else if (sender.equals(recipient)) {
+                writer.println("You can't send a message to yourself.");
+                clientLogger.warn("The user {} was trying to send a private message {} to himself", sender, message);
+            }
+            else {
+                ClientHandler recipientClient = null;
+                for (ClientHandler client : clients) {
+                    if (client.nickname.equalsIgnoreCase(recipient)) {
+                        recipientClient = client;
+                        break;
+                    }
+                }
+                if (recipientClient != null) {
+                    recipientClient.writer.println("(Private from " + sender + "): " + message);
+                    writer.println("Private message sent to " + recipient + ": " + message);
+                    clientLogger.info("Private message sent from {} to {}: {}", sender, recipient, message);
+                } else {
+                    writer.println("User " + recipient + " not found.");
+                    clientLogger.warn("User {} not found when {} tried to send a private message", recipient, sender);
+                }
             }
         }
         private void broadcastMessage(String message, String sender) {
             if (message.equals("")) {
+                writer.println("You can't send empty message.");
                 clientLogger.warn("Broadcast empty message from {}", sender);
             }
             else {
