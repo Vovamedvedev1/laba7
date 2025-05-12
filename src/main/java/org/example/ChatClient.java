@@ -32,12 +32,13 @@ public class ChatClient {
             }).start();
             String clientMessage;
             while (true) {
-                System.out.println("Enter message (type 'list' for user list, 'private <user> <message>' for private message, or just the message for broadcast):");
+                System.out.println("Commands:\n" + "1. Enter 'list'\n" + "2. Enter 'private client msg'\n" + "3. Enter 'msg'");
                 clientMessage = scanner.nextLine();
                 writer.println(clientMessage);
                 if (clientMessage.equalsIgnoreCase("quit")) {
                     break;
                 }
+
             }
         } catch (IOException e) {
             System.err.println("Client exception: " + e.getMessage());

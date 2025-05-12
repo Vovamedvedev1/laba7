@@ -78,16 +78,21 @@ public class ChatServer {
                         updateClientList();
                     }
                 } catch (IOException e) {
-                    clientLogger.warn("Error closing socket for client {}: {}", nickname, e.getMessage());
+                    clientLogger.error("Error closing socket for client {}: {}", nickname, e.getMessage());
                 }
             }
         }
         private void sendClientList() {
-            StringBuilder sb = new StringBuilder("Connected users: ");
-            for (ClientHandler client : clients) {
-                sb.append(client.nickname).append(" ");
+            if (clients.size() == 0) {
+                clientLogger.info("No clients");
             }
-            writer.println(sb.toString());
+            else {
+                StringBuilder sb = new StringBuilder("Connected users: ");
+                for (ClientHandler client : clients) {
+                    sb.append(client.nickname).append(" ");
+                }
+                writer.println(sb.toString());
+            }
         }
         private void updateClientList() {
             StringBuilder sb = new StringBuilder("Connected users: ");
@@ -117,10 +122,15 @@ public class ChatServer {
             }
         }
         private void broadcastMessage(String message, String sender) {
-            clientLogger.info("Broadcast message from {}: {}", sender, message);
-            for (ClientHandler client : clients) {
-                if (client != this) {
-                    client.writer.println("(" + sender + "): " + message);
+            if (message.equals("")) {
+                clientLogger.warn("Broadcast empty message from {}", sender);
+            }
+            else {
+                clientLogger.info("Broadcast message from {}: {}", sender, message);
+                for (ClientHandler client : clients) {
+                    if (client != this) {
+                        client.writer.println("(" + sender + "): " + message);
+                    }
                 }
             }
         }
